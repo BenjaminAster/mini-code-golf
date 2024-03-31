@@ -1,9 +1,9 @@
 
-ctx = (/** @type {any} */ (canvas).getContext`2d`);
+ctx = /** @type {any} */ (canvas).getContext`2d`;
 
 const canvasWidth = 800;
 const canvasHeight = 600;
-const ballRadius = 8;
+const ballRadius = 6;
 
 const TAU = 6.3;
 
@@ -13,46 +13,53 @@ const STATE_NOTHING = 0;
 const STATE_AIMING = 1;
 const STATE_ROLLING = 2;
 
-const leftEdge = 0;
-const halfTrackHeight = 150;
+const halfTrackHeight = 100;
 
 const /** @type {any} */ DEBUG__FPS = "system";
-// const /** @type {any} */ DEBUG__FPS = 5;
+// const /** @type {any} */ DEBUG__FPS = 250;
 
 math = Math;
 
 draw = (/** @type {number} */ timestamp) => {
-	deltaTime = timestamp - prevTime;
-	ctx.fillStyle = "tan";
-	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+	for (
+		deltaTime = timestamp - prevTime;
+		0 < deltaTime--;
+	) {
+		if (state == STATE_ROLLING) {
+			ballX += dirX * relativeVelocity;
+			ballY += dirY * relativeVelocity;
 
-	if (state == STATE_ROLLING) {
-		ballX += dirX * relativeVelocity * deltaTime;
-		ballY += dirY * relativeVelocity * deltaTime;
+			if (math.abs(ballX - canvasWidth / 2) > canvasWidth / 2 - ballRadius) {
+				// ballX = ballRadius * 2 - ballX;
+				dirX = -dirX;
+			}
+			if (math.abs(ballY) > halfTrackHeight - ballRadius) {
+				// ballY += (canvasHeight / 2 - ballRadius - math.abs(ballY)) * 2 * math.sign(dirY);
+				// ballY = -(halfTrackHeight - ballRadius) * 2 - ballY;
+				// ballY = (halfTrackHeight - ballRadius) * 2 * math.sign(dirY) - ballY;
+				// ballY = (dirY > 0
+				// 	? ((halfTrackHeight - ballRadius) * 2)
+				// 	: (-(halfTrackHeight - ballRadius) * 2)) - ballY;
+				// ballY = -ballY;
+				// ballY += (dirY > 0
+				// 	? (halfTrackHeight - ballRadius) * 2
+				// 	: (halfTrackHeight - ballRadius) * -2);
+				dirY = -dirY;
+			}
 
-		if (ballX < ballRadius) {
-			ballX = ballRadius * 2 - ballX;
-			dirX = -dirX;
-		}
-		if (ballX > canvasWidth - ballRadius) {
-			ballX = (canvasWidth - ballRadius) * 2 - ballX;
-			dirX = -dirX;
-		}
-		if (ballY < ballRadius - canvasHeight / 2) {
-			ballY = (ballRadius - canvasHeight / 2) * 2 - ballY;
-			dirY = -dirY;
-		}
-		if (ballY > canvasHeight / 2 - ballRadius) {
-			ballY = (canvasHeight / 2 - ballRadius) * 2 - ballY;
-			dirY = -dirY;
-		}
+			relativeVelocity -= .000_2;
 
-		relativeVelocity -= deltaTime / 5000;
-
-		if (relativeVelocity < 0) {
-			state = STATE_NOTHING;
+			if (relativeVelocity < 0) {
+				(state = STATE_NOTHING)
+			}
 		}
 	}
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+	ctx.fillStyle = "tan";
+	ctx.fillRect(0, canvasHeight / 2 - halfTrackHeight, canvasWidth, halfTrackHeight * 2);
+
 	if (state == STATE_AIMING) {
 		// ctx.lineCap = "round";
 		// ctx.setLineDash([0, 20]);
@@ -69,8 +76,6 @@ draw = (/** @type {number} */ timestamp) => {
 	ctx.fill();
 	ctx.closePath();
 
-	// prevBallX = ballX;
-	// prevBallY = ballY;
 	prevTime = timestamp;
 
 	if (DEBUG__FPS === "system") {
@@ -103,11 +108,15 @@ onpointermove = (event) => {
 };
 
 onpointerup = (event) => {
-	relativeVelocity = math.hypot(dirX, dirY);
-	dirX /= relativeVelocity;
-	dirY /= relativeVelocity;
-	relativeVelocity /= 1000;
-	state = STATE_ROLLING;
+	if (state == STATE_AIMING) {
+		relativeVelocity = math.hypot(dirX, dirY);
+		dirX /= relativeVelocity;
+		dirY /= relativeVelocity;
+		relativeVelocity /= 1000;
+		return (state = STATE_ROLLING);
+	} else {
+		return false;
+	}
 };
 
 

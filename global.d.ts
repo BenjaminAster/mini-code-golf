@@ -6,8 +6,11 @@ declare var ctx: CanvasRenderingContext2D;
 declare var ballX: number;
 declare var ballY: number;
 
-declare var prevBallX: number;
-declare var prevBallY: number;
+declare var newBallX: number;
+declare var newBallY: number;
+
+// declare var prevBallX: number;
+// declare var prevBallY: number;
 
 declare var dirX: number;
 declare var dirY: number;

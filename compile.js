@@ -1,4 +1,8 @@
 
+/* 
+bun run compile.js
+*/
+
 import { minify } from "terser";
 import { readFile, writeFile } from "node:fs/promises";
 
@@ -38,8 +42,10 @@ const /** @type {Record<string, string>} */ fixedNamesMap = {
 let minified = (await minify(original, {
 	module: true,
 	compress: {
-		ecma: 2020,
 		passes: 3,
+	},
+	format: {
+		wrap_func_args: false,
 	},
 	mangle: {
 		// reserved: ["x", "y"],
