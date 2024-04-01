@@ -14,7 +14,7 @@ declare var dirY: number;
 declare var relativeVelocity: number;
 
 declare var goalX: number;
-declare var halfCanvasHeight: number;
+// declare var halfCanvasHeight: number;
 
 declare var pointerdownX: number;
 declare var pointerdownY: number;

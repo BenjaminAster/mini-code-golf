@@ -8,7 +8,8 @@ const ballRadius = 6;
 
 const TAU = 7; // context2d.arc() clamps values >2pi to 2pi
 
-ballX = 100;
+ballX = 50;
+ballY = 150;
 
 const STATE_NOTHING = 0;
 const STATE_AIMING = 1;
@@ -17,17 +18,17 @@ const STATE_ROLLING = 2;
 const halfTrackHeight = 100;
 const goalCircleRadius = 150;
 goalX = canvasWidth - goalCircleRadius;
-const goalY = 0;
+const goalY = canvasHeight / 2;
 // const circleRectangleIntersectionX = 539;
 
-const testCircleX = 400;
-const testCircleY = 80;
-const testCircleRadius = 40;
+// const testCircleX = 400;
+// const testCircleY = 80;
+// const testCircleRadius = 40;
 
-const numOfCircles = 4;
-circlesXData = [500, 200, 500, 350];
-circlesYData = [100, 200, 200, 100];
-circlesRadiusData = [50, 80, 50, 80];
+const numOfCircles = 6;
+circlesXData = [500, 150, 500, 300, 620, 680];
+circlesYData = [85, 210, 215, 90, 150, 150];
+circlesRadiusData = [50, 70, 50, 70, 20, 20];
 
 const /** @type {any} */ DEBUG__FPS = "system";
 // const /** @type {any} */ DEBUG__FPS = 10;
@@ -38,9 +39,9 @@ math_hypot = math.hypot;
 ctx_beginPath = (/** @type {any} */ _) => ctx.beginPath();
 // ctx_closePath = (/** @type {any} */ _) => ctx.closePath();
 
-drawCircle = (centerX, centerY, radius) => {
+drawCircle = (...centerX_centerY_radius) => {
 	ctx_beginPath();
-	ctx.arc(centerX, centerY + canvasHeight / 2, radius, 0, TAU);
+	ctx.arc(...centerX_centerY_radius, 0, TAU);
 	ctx.fill();
 };
 
@@ -61,26 +62,27 @@ draw = (/** @type {number} */ timestamp) => {
 		relativeVelocity -= .000_2,
 		(relativeVelocity < 0) && (state = STATE_NOTHING)
 	) {
-		collisionWithCircle(testCircleX, testCircleY, testCircleRadius);
+		for (tempNumber = numOfCircles; tempNumber--;) {
+			if (level * 5 & 1 << tempNumber) {
+				// console.log(tempNumber);
+				collisionWithCircle(circlesXData[tempNumber], circlesYData[tempNumber], circlesRadiusData[tempNumber]);
+			}
+		}
+
+		// collisionWithCircle(testCircleX, testCircleY, testCircleRadius);
 		if (ballX < circleRectangleIntersectionX) {
 			if (ballX < ballRadius) {
 				ballAngle = math.PI - ballAngle;
 			}
-			if (math.abs(ballY) > halfTrackHeight - ballRadius) {
+			if (math.abs(ballY - canvasHeight / 2) > halfTrackHeight - ballRadius) {
 				ballAngle = -ballAngle;
 			}
 		} else {
-			// if ((temp1 = math_hypot(ballX - goalX, ballY)) > goalCircleRadius - ballRadius) {
-			// 	ballAngle = 2 * math_atan2(goalX - ballX, ballY) - ballAngle;
-			// } else if (temp1 < ballRadius && relativeVelocity < .1) {
-			// 	state = ballY = shots = 0; // STATE_NOTHING
-			// 	ballX = 100;
-			// 	++level;
-			// }
 			collisionWithCircle(goalX, goalY, -goalCircleRadius);
-			if (distanceToPreviousCircleCenter < ballRadius && relativeVelocity < .1) {
-				state = ballY = shots = 0; // STATE_NOTHING
-				ballX = 100;
+			if (distanceToPreviousCircleCenter < ballRadius && relativeVelocity < .2) {
+				state = shots = 0; // STATE_NOTHING
+				ballX = 50;
+				ballY = 150;
 				++level;
 			}
 		}
@@ -92,10 +94,10 @@ draw = (/** @type {number} */ timestamp) => {
 
 	ctx[fillStyle_string] = "tan";
 	ctx[fillRect_string](0, canvasHeight / 2 - halfTrackHeight, circleRectangleIntersectionX = 539, halfTrackHeight * 2)
-	drawCircle(goalX, 0, goalCircleRadius);
+	drawCircle(goalX, canvasHeight / 2, goalCircleRadius);
 
 	ctx[fillStyle_string] = "red";
-	drawCircle(goalX, 0, ballRadius);
+	drawCircle(goalX, goalY, ballRadius);
 
 	ctx[fillStyle_string] = black = "#000";
 	drawCircle(ballX, ballY, ballRadius);
@@ -104,8 +106,10 @@ draw = (/** @type {number} */ timestamp) => {
 	// drawCircle(testCircleX, testCircleY, testCircleRadius);
 
 	for (tempNumber = numOfCircles; tempNumber--;) {
-		// console.log(tempNumber);
-		drawCircle(circlesXData[tempNumber], circlesYData[tempNumber], circlesRadiusData[tempNumber]);
+		if (level * 5 & 1 << tempNumber) {
+			// console.log(tempNumber);
+			drawCircle(circlesXData[tempNumber], circlesYData[tempNumber], circlesRadiusData[tempNumber]);
+		}
 	}
 
 	ctx[fillStyle_string] = white;
@@ -120,8 +124,8 @@ draw = (/** @type {number} */ timestamp) => {
 		// ctx.setLineDash([0, 20]);
 		ctx.strokeStyle = black + 3;
 		(/** @type {any} */ (ctx_beginPath))(ctx.lineWidth = ballRadius * 3);
-		ctx.moveTo(ballX, ballY + canvasHeight / 2);
-		ctx.lineTo(ballX + dirX / 3, ballY + canvasHeight / 2 + dirY / 3);
+		ctx.moveTo(ballX, ballY);
+		ctx.lineTo(ballX + dirX / 3, ballY + dirY / 3);
 		ctx.stroke();
 	}
 
@@ -160,16 +164,17 @@ onpointerup = (event) => {
 };
 
 
+// level = 51;
 
 draw(
 	prevTime =
-	ballY =
+	// ballY =
 	level =
 	shots =
 	state = 0 /* STATE_NOTHING */
 );
 
 
-halfCanvasHeight = 0; // circumvents weird bug in Terser; this gets removed after compilation
+// circumvents weird bug in Terser; this gets removed after compilation:
 (/** @type {any} */ (black)) = 0;
 (/** @type {any} */ (white)) = 0;

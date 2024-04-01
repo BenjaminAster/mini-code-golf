@@ -64,7 +64,7 @@ minified = minified
 	.replaceAll("/*!REMOVE_NEXT*/)", "");
 
 const html = `<body style=touch-action:none onload='${minified.replaceAll("'", "&#39;")
-	}'><input id=I><canvas id=C width=800 height=300>`;
+	}'><input id=I><br><canvas id=C width=800 height=300>`;
 
 console.log(`Current total HTML code length: ${html.length}.`);
 
