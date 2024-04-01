@@ -13,6 +13,7 @@ const globalTSFile = await readFile("./global.d.ts", { encoding: "utf-8" });
 const validVariableNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_";
 
 const /** @type {Record<string, string>} */ fixedNamesMap = {
+	infoElement: "I",
 	canvas: "C",
 	pointerdownX: "x",
 	pointerdownY: "y",
@@ -43,9 +44,11 @@ let minified = (await minify(original, {
 	module: true,
 	compress: {
 		passes: 3,
+		unsafe_math: true,
 	},
 	format: {
 		wrap_func_args: false,
+		wrap_iife: false,
 	},
 	mangle: {
 		// reserved: ["x", "y"],
@@ -55,11 +58,13 @@ let minified = (await minify(original, {
 
 // minified = minified.slice(minified.indexOf("=") - 1);
 
-minified = minified.replace(/;$/, "");
+minified = minified
+	.replace(/(,\w=0)+;$/, "")
+	.replaceAll("(/*!REMOVE_PREV*/", "")
+	.replaceAll("/*!REMOVE_NEXT*/)", "");
 
-const html = `<body style=touch-action:none onload='${
-	minified.replaceAll("'", "&#39;")
-}'><canvas id=C width=800 height=600>`;
+const html = `<body style=touch-action:none onload='${minified.replaceAll("'", "&#39;")
+	}'><input id=I><canvas id=C width=800 height=300>`;
 
 console.log(`Current total HTML code length: ${html.length}.`);
 
