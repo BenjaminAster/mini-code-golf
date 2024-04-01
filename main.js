@@ -19,11 +19,6 @@ const halfTrackHeight = 100;
 const goalCircleRadius = 150;
 goalX = canvasWidth - goalCircleRadius;
 const goalY = canvasHeight / 2;
-// const circleRectangleIntersectionX = 539;
-
-// const testCircleX = 400;
-// const testCircleY = 80;
-// const testCircleRadius = 40;
 
 const numOfCircles = 6;
 circlesXData = [500, 150, 500, 300, 620, 680];
@@ -37,7 +32,6 @@ math = Math;
 math_atan2 = math.atan2;
 math_hypot = math.hypot;
 ctx_beginPath = (/** @type {any} */ _) => ctx.beginPath();
-// ctx_closePath = (/** @type {any} */ _) => ctx.closePath();
 
 drawCircle = (...centerX_centerY_radius) => {
 	ctx_beginPath();
@@ -64,12 +58,10 @@ draw = (/** @type {number} */ timestamp) => {
 	) {
 		for (tempNumber = numOfCircles; tempNumber--;) {
 			if (level * 5 & 1 << tempNumber) {
-				// console.log(tempNumber);
 				collisionWithCircle(circlesXData[tempNumber], circlesYData[tempNumber], circlesRadiusData[tempNumber]);
 			}
 		}
 
-		// collisionWithCircle(testCircleX, testCircleY, testCircleRadius);
 		if (ballX < circleRectangleIntersectionX) {
 			if (ballX < ballRadius) {
 				ballAngle = math.PI - ballAngle;
@@ -103,11 +95,9 @@ draw = (/** @type {number} */ timestamp) => {
 	drawCircle(ballX, ballY, ballRadius);
 
 	ctx[fillStyle_string] = black + 0x3E7;
-	// drawCircle(testCircleX, testCircleY, testCircleRadius);
 
 	for (tempNumber = numOfCircles; tempNumber--;) {
 		if (level * 5 & 1 << tempNumber) {
-			// console.log(tempNumber);
 			drawCircle(circlesXData[tempNumber], circlesYData[tempNumber], circlesRadiusData[tempNumber]);
 		}
 	}
@@ -115,21 +105,14 @@ draw = (/** @type {number} */ timestamp) => {
 	ctx[fillStyle_string] = white;
 	ctx[fillRect_string](0, 0, circleRectangleIntersectionX, canvasHeight / 2 - halfTrackHeight);
 	ctx[fillRect_string](0, canvasHeight / 2 + halfTrackHeight, circleRectangleIntersectionX, canvasHeight / 2 - halfTrackHeight);
-	// for (tempNumber = 0; tempNumber < 999; tempNumber += canvasHeight / 2 + halfTrackHeight) {
-	// 	ctx[fillRect_string](0, tempNumber, circleRectangleIntersectionX, canvasHeight / 2 + halfTrackHeight);
-	// }
 
 	if (state == STATE_AIMING) {
-		// ctx.lineCap = "round";
-		// ctx.setLineDash([0, 20]);
 		ctx.strokeStyle = black + 3;
 		(/** @type {any} */ (ctx_beginPath))(ctx.lineWidth = ballRadius * 3);
 		ctx.moveTo(ballX, ballY);
 		ctx.lineTo(ballX + dirX / 3, ballY + dirY / 3);
 		ctx.stroke();
 	}
-
-	// ctx.fillRect(circleRectangleIntersectionX, 0, 1, 600);
 
 	prevTime = timestamp;
 
@@ -163,12 +146,8 @@ onpointerup = (event) => {
 	}
 };
 
-
-// level = 51;
-
 draw(
 	prevTime =
-	// ballY =
 	level =
 	shots =
 	state = 0 /* STATE_NOTHING */

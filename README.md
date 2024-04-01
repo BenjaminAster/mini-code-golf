@@ -19,4 +19,7 @@ Demo video: https://www.youtube.com/watch?v=2vIFzDxzrYk
 - Click anywhere on the screen and drag your mouse/finger around to aim the ball.
 - Try to push the ball into the goal (the red circle).
 
+## Code architecture
+The human-readable code is located in [main.js](./main.js) and is then compiled via [compile.js](./compile.js) into [index.html](./index.html).
+
 ![Screenshot of mini code golf](./assets/screenshot.png)
